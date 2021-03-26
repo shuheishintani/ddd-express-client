@@ -1,54 +1,102 @@
+import { ModalForm } from "@/components/ModalForm";
+import { TodoItem } from "@/components/TodoItem";
+import { TaskInput } from "@/dto/TaskInput";
+import { Task } from "@/entities/Task";
+import { useTasks } from "@/hooks/useTasks";
+import { AddIcon } from "@chakra-ui/icons";
 import {
-  Link as ChakraLink,
-  Text,
-  Code,
-  List,
-  ListIcon,
-  ListItem,
+  Flex,
+  IconButton,
+  Select,
+  Spacer,
+  Stack,
+  UnorderedList,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { CheckCircleIcon, LinkIcon } from "@chakra-ui/icons";
-import { Hero } from "../components/Hero";
-import { Container } from "../components/Container";
-import { Main } from "../components/Main";
-import { DarkModeSwitch } from "../components/DarkModeSwitch";
-import { CTA } from "../components/CTA";
-import { Footer } from "../components/Footer";
+import { NextPage } from "next";
+import React, { useState } from "react";
 
-const Index = () => (
-  <Container height="100vh">
-    <Hero />
-    <Main>
-      <Text>
-        Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code>.
-      </Text>
+interface Props {}
 
-      <List spacing={3} my={0}>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink
-            isExternal
-            href="https://chakra-ui.com"
-            flexGrow={1}
-            mr={2}
-          >
-            Chakra UI <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink isExternal href="https://nextjs.org" flexGrow={1} mr={2}>
-            Next.js <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-      </List>
-    </Main>
+const Tasks: NextPage<Props> = () => {
+  const { tasks, createTask, updateTask, deleteTask } = useTasks();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [filter, setFilter] = useState<string>("all");
 
-    <DarkModeSwitch />
-    <Footer>
-      <Text>Next ❤️ Chakra</Text>
-    </Footer>
-    <CTA />
-  </Container>
-);
+  const handleCreateTask = async (taskInput: TaskInput) => {
+    await createTask(taskInput);
+    onClose();
+    toast({
+      title: "Todoを新規作成しました",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
 
-export default Index;
+  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilter(e.target.value);
+  };
+
+  const condition = (task: Task) => {
+    if (filter === "all") {
+      return true;
+    } else if (filter === "done") {
+      return task.done === true;
+    } else if (filter === "undone") {
+      return task.done === false;
+    }
+  };
+
+  return (
+    <>
+      <Flex align="center">
+        <Select value={filter} onChange={handleSelect} mr={4}>
+          <option value="all">すべてのTodo</option>
+          <option value="undone">未完了のTodo</option>
+          <option value="done">完了済みのTodo</option>
+        </Select>
+        <Spacer />
+        <IconButton
+          colorScheme="teal"
+          aria-label="Add Todo"
+          icon={<AddIcon />}
+          size="lg"
+          borderRadius="full"
+          onClick={onOpen}
+        />
+      </Flex>
+      <UnorderedList mt={4}>
+        <Stack spacing={8}>
+          {tasks &&
+            tasks
+              .filter((task) => condition(task))
+              .sort(
+                (task1, task2) =>
+                  new Date(task2.created_at).getTime() -
+                  new Date(task1.created_at).getTime()
+              )
+              .map((task: Task) => (
+                <TodoItem
+                  key={task.id}
+                  task={task}
+                  updateTask={updateTask}
+                  deleteTask={deleteTask}
+                />
+              ))}
+        </Stack>
+      </UnorderedList>
+      <ModalForm
+        isOpen={isOpen}
+        onClose={onClose}
+        mutation={handleCreateTask}
+        labels={["title", "description"]}
+        action="追加"
+      />
+    </>
+  );
+};
+
+export default Tasks;

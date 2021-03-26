@@ -1,4 +1,5 @@
-import { useLoginUser } from "@/hooks/useLoginUser";
+import { UserInput } from "@/dto/UserInput";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Button,
   FormControl,
@@ -13,23 +14,22 @@ import { useForm } from "react-hook-form";
 interface Props {}
 
 const Login: NextPage<Props> = () => {
-  const { handleSubmit, errors, register, formState } = useForm();
-  const loginUser = useLoginUser();
-
+  const { handleSubmit, errors, register: formRegister, formState } = useForm();
+  const { login } = useAuth();
   return (
     <>
       <p>Login</p>
-      <form onSubmit={handleSubmit(loginUser)}>
+      <form onSubmit={handleSubmit(login)}>
         <FormControl isInvalid={errors.username}>
           <FormLabel htmlFor="username">Username</FormLabel>
-          <Input name="username" placeholder="username" ref={register()} />
+          <Input name="username" placeholder="username" ref={formRegister()} />
           <FormErrorMessage>
             {errors.name && errors.name.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={errors.password}>
           <FormLabel htmlFor="password">Password</FormLabel>
-          <Input name="password" placeholder="password" ref={register()} />
+          <Input name="password" placeholder="password" ref={formRegister()} />
           <FormErrorMessage>
             {errors.password && errors.password.message}
           </FormErrorMessage>

@@ -1,27 +1,48 @@
 import { Layout } from "@/components/Layout";
-import theme from "@/theme";
-import { ChakraProvider, ColorModeProvider } from "@chakra-ui/react";
+import { UserViewModel } from "@/fragments/UserViewModel";
+import {
+  ChakraProvider,
+  ColorModeProvider,
+  extendTheme,
+} from "@chakra-ui/react";
 import { AppProps } from "next/app";
-import React from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import React, { createContext, useMemo, useState } from "react";
 
-const queryClient = new QueryClient();
+export const AuthContext = createContext(
+  {} as {
+    user: UserViewModel | null;
+    setUser: React.Dispatch<React.SetStateAction<UserViewModel | null>>;
+  }
+);
+
+const theme = extendTheme({
+  components: {
+    Button: { baseStyle: { _focus: { boxShadow: "none" } } },
+  },
+  initialColorMode: "light",
+  useSystemColorMode: false,
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [user, setUser] = useState<UserViewModel | null>(null);
+  const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
+
   return (
-    <ChakraProvider resetCSS theme={theme}>
-      <ColorModeProvider
-        options={{
-          useSystemColorMode: true,
-        }}
-      >
-        <QueryClientProvider client={queryClient}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </QueryClientProvider>
-      </ColorModeProvider>
-    </ChakraProvider>
+    <>
+      <ChakraProvider resetCSS theme={theme}>
+        <ColorModeProvider
+          options={{
+            useSystemColorMode: true,
+          }}
+        >
+          <AuthContext.Provider value={providerValue}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </AuthContext.Provider>
+        </ColorModeProvider>
+      </ChakraProvider>
+    </>
   );
 }
 
