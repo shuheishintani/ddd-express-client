@@ -25,7 +25,7 @@ export const useAuth = () => {
       }
       setLoading(false);
     })();
-  }, []);
+  }, [user]);
 
   const handleResponse = async (data: AuthResponse | ErrorResponse) => {
     if (data.hasOwnProperty("error")) {
