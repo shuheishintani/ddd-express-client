@@ -58,7 +58,7 @@ export const ModalTaskForm: React.FC<Props> = ({
                   defaultValue={defaultValues && defaultValues[0]}
                 />
                 <FormErrorMessage>
-                  {errors.name && errors.name.message}
+                  {errors.title && errors.title.message}
                 </FormErrorMessage>
               </FormControl>
               <FormControl
@@ -75,7 +75,7 @@ export const ModalTaskForm: React.FC<Props> = ({
                   defaultValue={defaultValues && defaultValues[1]}
                 />
                 <FormErrorMessage>
-                  {errors.name && errors.name.message}
+                  {errors.description && errors.description.message}
                 </FormErrorMessage>
               </FormControl>
             </ModalBody>

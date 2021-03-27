@@ -30,7 +30,6 @@ export const useAuth = () => {
   const handleResponse = async (data: AuthResponse | ErrorResponse) => {
     if (data.hasOwnProperty("error")) {
       const errorData = data as ErrorResponse;
-      console.log(errorData);
       setStatusCode(errorData.error.status);
       return;
     }
