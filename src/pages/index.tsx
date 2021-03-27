@@ -33,7 +33,7 @@ const Tasks: NextPage<Props> = () => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("login");
+      router.push("/login");
     }
   }, [loading, user]);
 
