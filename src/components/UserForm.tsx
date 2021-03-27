@@ -11,6 +11,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { PasswordInput } from "./PasswordInput";
 
 interface Props {
   mutation: (userInput: UserInput) => void;
@@ -40,7 +41,12 @@ export const UserForm: React.FC<Props> = ({ mutation, action, statusCode }) => {
     <form onSubmit={handleSubmit(mutation)}>
       <FormControl isInvalid={errors.username}>
         <FormLabel htmlFor="username">ユーザー名</FormLabel>
-        <Input name="username" placeholder="ユーザー名" ref={register()} />
+        <Input
+          name="username"
+          placeholder="ユーザー名"
+          ref={register()}
+          autoComplete="off"
+        />
         <FormErrorMessage>
           {errors.username && errors.username.message}
         </FormErrorMessage>
@@ -52,7 +58,12 @@ export const UserForm: React.FC<Props> = ({ mutation, action, statusCode }) => {
       </FormControl>
       <FormControl isInvalid={errors.password} mt={4}>
         <FormLabel htmlFor="password">パスワード</FormLabel>
-        <Input name="password" placeholder="パスワード" ref={register()} />
+        <PasswordInput
+          name="password"
+          placeholder="パスワード"
+          refProp={register()}
+          autoComplete="off"
+        />
         <FormErrorMessage>
           {errors.password && errors.password.message}
         </FormErrorMessage>
