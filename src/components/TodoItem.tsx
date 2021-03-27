@@ -16,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { ModalForm } from "./ModalForm";
+import { ModalTaskForm } from "./ModalTaskForm";
 
 interface Props {
   task: Task;
@@ -91,11 +91,10 @@ export const TodoItem: React.FC<Props> = ({
         />
       </Flex>
       <Text mt={4}>{description}</Text>
-      <ModalForm
+      <ModalTaskForm
         isOpen={isOpen}
         onClose={onClose}
         mutation={updateThisTask}
-        labels={["title", "description"]}
         defaultValues={[title, description]}
         action="編集"
       />

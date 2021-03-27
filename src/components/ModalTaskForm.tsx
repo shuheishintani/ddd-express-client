@@ -1,3 +1,4 @@
+import { TaskInput } from "@/dto/TaskInput";
 import {
   Button,
   FormControl,
@@ -11,23 +12,23 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Textarea,
 } from "@chakra-ui/react";
+import React from "react";
 import { useForm } from "react-hook-form";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  mutation: any;
-  labels: string[];
+  mutation: (taskInput: TaskInput) => void;
   defaultValues?: string[];
   action: string;
 }
 
-export const ModalForm: React.FC<Props> = ({
+export const ModalTaskForm: React.FC<Props> = ({
   isOpen,
   onClose,
   mutation,
-  labels,
   defaultValues,
   action,
 }) => {
@@ -47,21 +48,32 @@ export const ModalForm: React.FC<Props> = ({
           <ModalCloseButton />
           <form onSubmit={handleSubmit(mutation)}>
             <ModalBody pb={6}>
-              {labels.map((label, i) => (
-                <FormControl isInvalid={errors[label]} key={label}>
-                  <FormLabel htmlFor={label}>{label}</FormLabel>
-                  <Input
-                    name={label}
-                    placeholder={label}
-                    ref={register()}
-                    autoComplete="off"
-                    defaultValue={defaultValues && defaultValues[i]}
-                  />
-                  <FormErrorMessage>
-                    {errors.name && errors.name.message}
-                  </FormErrorMessage>
-                </FormControl>
-              ))}
+              <FormControl isInvalid={errors.title} key="title">
+                <FormLabel htmlFor="title">タイトル</FormLabel>
+                <Input
+                  name="title"
+                  placeholder="タイトル"
+                  ref={register()}
+                  autoComplete="off"
+                  defaultValue={defaultValues && defaultValues[0]}
+                />
+                <FormErrorMessage>
+                  {errors.name && errors.name.message}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={errors.description} key="description">
+                <FormLabel htmlFor="description">メモ</FormLabel>
+                <Textarea
+                  name="description"
+                  placeholder="メモ"
+                  ref={register()}
+                  autoComplete="off"
+                  defaultValue={defaultValues && defaultValues[1]}
+                />
+                <FormErrorMessage>
+                  {errors.name && errors.name.message}
+                </FormErrorMessage>
+              </FormControl>
             </ModalBody>
             <ModalFooter>
               <Button

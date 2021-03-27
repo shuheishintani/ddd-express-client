@@ -10,19 +10,18 @@ export const useAuth = () => {
   const router = useRouter();
   const { axios } = useAxios();
   const { user, setUser } = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
       if (!user) {
         const token = localStorage.getItem("token");
         if (token) {
-          setLoading(true);
           const { data } = await axios.get("/users/me");
           setUser(data);
-          setLoading(false);
         }
       }
+      setLoading(false);
     })();
   }, []);
 
@@ -34,14 +33,14 @@ export const useAuth = () => {
 
   const register = async (userInput: UserInput) => {
     const { data } = await axios.post("/auth/register", userInput);
-    await handleAuthResponse(data);
+    handleAuthResponse(data);
     router.push("/");
   };
 
   const login = async (userInput: UserInput) => {
     const { data } = await axios.post("/auth/login", userInput);
     console.log(data);
-    await handleAuthResponse(data);
+    handleAuthResponse(data);
     await wait(1);
     router.push("/");
   };
