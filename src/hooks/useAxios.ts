@@ -8,6 +8,7 @@ export const useAxios = () => {
   const { setUser } = useContext(AuthContext);
 
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  axios.defaults.withCredentials = true;
   axios.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");
     config.headers = Object.assign(
