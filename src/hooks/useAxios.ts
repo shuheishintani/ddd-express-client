@@ -1,15 +1,11 @@
 import { AuthContext } from "@/pages/_app";
 import axios from "axios";
-import { useRouter } from "next/router";
 import { useContext } from "react";
 
 export const useAxios = () => {
-  const router = useRouter();
   const { setUser } = useContext(AuthContext);
 
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
-  // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-  // axios.defaults.withCredentials = true;
   axios.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");
     config.headers = Object.assign(
@@ -23,10 +19,8 @@ export const useAxios = () => {
       return response;
     },
     (error) => {
-      if (error) {
-        setUser(null);
-      }
-      return error;
+      setUser(null);
+      return Promise.resolve(error.response);
     }
   );
 

@@ -6,8 +6,10 @@ import React from "react";
 interface Props {}
 
 const Login: NextPage<Props> = () => {
-  const { login } = useAuth();
-  return <UserForm action="ログイン" mutation={login} />;
+  const { login, statusCode } = useAuth();
+  return (
+    <UserForm action="ログイン" mutation={login} statusCode={statusCode} />
+  );
 };
 
 export default Login;

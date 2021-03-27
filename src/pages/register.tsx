@@ -6,8 +6,11 @@ import React from "react";
 interface Props {}
 
 const Register: NextPage<Props> = () => {
-  const { register } = useAuth();
-  return <UserForm action="新規登録" mutation={register} />;
+  const { register, statusCode } = useAuth();
+  console.log(statusCode);
+  return (
+    <UserForm action="新規登録" mutation={register} statusCode={statusCode} />
+  );
 };
 
 export default Register;

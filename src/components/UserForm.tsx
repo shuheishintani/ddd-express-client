@@ -5,32 +5,59 @@ import {
   Input,
   FormErrorMessage,
   Button,
+  Text,
 } from "@chakra-ui/react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 interface Props {
   mutation: (userInput: UserInput) => void;
   action: string;
+  statusCode?: number | null;
 }
 
-export const UserForm: React.FC<Props> = ({ mutation, action }) => {
-  const { handleSubmit, errors, register: formRegister, formState } = useForm();
+const schema = yup.object().shape({
+  username: yup.string().required("ユーザー名を入力してください。"),
+  password: yup
+    .string()
+    .required("パスワードを入力してください。")
+    .min(8, "パスワードは最低8文字以上必要です。"),
+});
+
+export const UserForm: React.FC<Props> = ({ mutation, action, statusCode }) => {
+  const { handleSubmit, errors, register, formState } = useForm({
+    resolver: yupResolver(schema),
+  });
+  console.log(errors);
+  console.log(statusCode);
+
   return (
     <form onSubmit={handleSubmit(mutation)}>
       <FormControl isInvalid={errors.username}>
         <FormLabel htmlFor="username">ユーザー名</FormLabel>
-        <Input name="username" placeholder="ユーザー名" ref={formRegister()} />
+        <Input name="username" placeholder="ユーザー名" ref={register()} />
         <FormErrorMessage>
-          {errors.name && errors.name.message}
+          {errors.username && errors.username.message}
         </FormErrorMessage>
+        {statusCode === 409 && (
+          <Text color="red.300" fontSize="sm" mt={1}>
+            ユーザー名が重複しています。
+          </Text>
+        )}
       </FormControl>
       <FormControl isInvalid={errors.password} mt={4}>
         <FormLabel htmlFor="password">パスワード</FormLabel>
-        <Input name="password" placeholder="パスワード" ref={formRegister()} />
+        <Input name="password" placeholder="パスワード" ref={register()} />
         <FormErrorMessage>
           {errors.password && errors.password.message}
         </FormErrorMessage>
+        {statusCode === 401 && (
+          <Text color="red.300" fontSize="sm" mt={1}>
+            パスワードが間違っています。
+          </Text>
+        )}
       </FormControl>
       <Button
         mt={4}
