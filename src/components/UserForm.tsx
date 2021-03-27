@@ -55,6 +55,11 @@ export const UserForm: React.FC<Props> = ({ mutation, action, statusCode }) => {
             すでに存在するユーザーです。
           </Text>
         )}
+        {statusCode === 404 && (
+          <Text color="red.300" fontSize="sm" mt={1}>
+            ユーザーが存在しません。
+          </Text>
+        )}
       </FormControl>
       <FormControl isInvalid={errors.password} mt={4}>
         <FormLabel htmlFor="password">パスワード</FormLabel>
