@@ -10,7 +10,10 @@ export const useAxios = () => {
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   axios.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");
-    config.headers = Object.assign({ Authorization: token }, config.headers);
+    config.headers = Object.assign(
+      { Authorization: `Bearer ${token}` },
+      config.headers
+    );
     return config;
   });
   axios.interceptors.response.use(

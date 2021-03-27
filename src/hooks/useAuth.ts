@@ -25,31 +25,30 @@ export const useAuth = () => {
     })();
   }, []);
 
-  const handleAuthResponse = (data: AuthResponse) => {
+  const handleAuthResponse = async (data: AuthResponse) => {
     const { token, user } = data;
     localStorage.setItem("token", token);
+    await wait(1);
     setUser(user);
   };
 
   const register = async (userInput: UserInput) => {
     const { data } = await axios.post("/auth/register", userInput);
-    handleAuthResponse(data);
+    await handleAuthResponse(data);
     router.push("/");
   };
 
   const login = async (userInput: UserInput) => {
     const { data } = await axios.post("/auth/login", userInput);
-    console.log(data);
-    handleAuthResponse(data);
-    await wait(1);
+    await handleAuthResponse(data);
     router.push("/");
   };
 
   const logout = async () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setUser(null);
     await wait(1);
+    setUser(null);
     router.push("/login");
   };
 

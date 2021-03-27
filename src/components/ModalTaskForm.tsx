@@ -61,7 +61,11 @@ export const ModalTaskForm: React.FC<Props> = ({
                   {errors.name && errors.name.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={errors.description} key="description">
+              <FormControl
+                isInvalid={errors.description}
+                key="description"
+                mt={4}
+              >
                 <FormLabel htmlFor="description">メモ</FormLabel>
                 <Textarea
                   name="description"

@@ -1,5 +1,5 @@
 import { ModalTaskForm } from "@/components/ModalTaskForm";
-import { TodoItem } from "@/components/TodoItem";
+import { TaskItem } from "@/components/TaskItem";
 import { TaskInput } from "@/dto/TaskInput";
 import { Task } from "@/entities/Task";
 import { useTasks } from "@/hooks/useTasks";
@@ -19,6 +19,7 @@ import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/router";
+import { TaskList } from "@/components/TaskList";
 
 interface Props {}
 
@@ -30,24 +31,22 @@ const Tasks: NextPage<Props> = () => {
   const [filter, setFilter] = useState<string>("all");
   const router = useRouter();
 
-  const handleCreateTask = async (taskInput: TaskInput) => {
-    await createTask(taskInput);
-    onClose();
-    toast({
-      title: "Todoを新規作成しました",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
-  };
-
   useEffect(() => {
     if (!loading && !user) {
       router.push("login");
     }
   }, [loading, user]);
 
-  console.log(user);
+  const handleCreateTask = async (taskInput: TaskInput) => {
+    await createTask(taskInput);
+    onClose();
+    toast({
+      title: "Todoを新規作成しました。",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilter(e.target.value);
@@ -63,13 +62,9 @@ const Tasks: NextPage<Props> = () => {
     }
   };
 
-  if (loading) {
-    return <Spinner />;
-  }
-
   return (
     <>
-      {user && (
+      {user ? (
         <>
           <Flex align="center">
             <Select value={filter} onChange={handleSelect} mr={4}>
@@ -87,26 +82,12 @@ const Tasks: NextPage<Props> = () => {
               onClick={onOpen}
             />
           </Flex>
-          <UnorderedList mt={4}>
-            <Stack spacing={8}>
-              {tasks &&
-                tasks
-                  .filter((task) => condition(task))
-                  .sort(
-                    (task1, task2) =>
-                      new Date(task2.created_at).getTime() -
-                      new Date(task1.created_at).getTime()
-                  )
-                  .map((task: Task) => (
-                    <TodoItem
-                      key={task.id}
-                      task={task}
-                      updateTask={updateTask}
-                      deleteTask={deleteTask}
-                    />
-                  ))}
-            </Stack>
-          </UnorderedList>
+          <TaskList
+            tasks={tasks}
+            condition={condition}
+            updateTask={updateTask}
+            deleteTask={deleteTask}
+          />
           <ModalTaskForm
             isOpen={isOpen}
             onClose={onClose}
@@ -114,6 +95,8 @@ const Tasks: NextPage<Props> = () => {
             action="追加"
           />
         </>
+      ) : (
+        <Spinner />
       )}
     </>
   );

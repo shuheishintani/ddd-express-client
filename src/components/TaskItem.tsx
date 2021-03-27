@@ -24,7 +24,7 @@ interface Props {
   deleteTask: (taskId: number) => Promise<void>;
 }
 
-export const TodoItem: React.FC<Props> = ({
+export const TaskItem: React.FC<Props> = ({
   task: { id, title, description, done, created_at },
   updateTask,
   deleteTask,
@@ -35,30 +35,30 @@ export const TodoItem: React.FC<Props> = ({
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { moment } = useMoment();
 
-  console.log(new Date(created_at).getTime());
-
   const handleDelete = async (taskId: number) => {
     setIsDeleting(true);
     await wait(1);
     deleteTask(taskId);
   };
 
-  const doneTask = async (taskId: number) => {
+  const handleDoneTask = async (taskId: number) => {
     setIsUpdating(true);
     await updateTask(taskId, { done: !done });
     setIsUpdating(false);
   };
 
-  const updateThisTask = async (taskInput: TaskInput) => {
+  const handleUpdateThisTask = async (taskInput: TaskInput) => {
     await updateTask(id, taskInput);
     onClose();
     toast({
-      title: "編集内容を保存しました.",
+      title: "編集内容を保存しました。",
       status: "success",
       duration: 3000,
       isClosable: true,
     });
   };
+
+  console.log(description);
 
   return (
     <Box p={5} shadow="md" borderWidth="1px" borderRadius="base">
@@ -69,7 +69,7 @@ export const TodoItem: React.FC<Props> = ({
           <Checkbox
             colorScheme="green"
             isChecked={done}
-            onClick={() => doneTask(id)}
+            onClick={() => handleDoneTask(id)}
           />
         )}
 
@@ -90,11 +90,18 @@ export const TodoItem: React.FC<Props> = ({
           isLoading={isDeleting}
         />
       </Flex>
-      <Text mt={4}>{description}</Text>
+      <Text mt={4}>
+        {description.split("\n").map((str, index) => (
+          <React.Fragment key={index}>
+            {str}
+            <br />
+          </React.Fragment>
+        ))}
+      </Text>
       <ModalTaskForm
         isOpen={isOpen}
         onClose={onClose}
-        mutation={updateThisTask}
+        mutation={handleUpdateThisTask}
         defaultValues={[title, description]}
         action="編集"
       />

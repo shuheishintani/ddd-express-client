@@ -18,6 +18,7 @@ import React from "react";
 export const NavBar: React.FC = () => {
   const { user, loading, logout } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
 
   const handleLogout = async () => {
     onOpen();
