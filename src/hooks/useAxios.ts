@@ -9,7 +9,7 @@ export const useAxios = () => {
 
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-  axios.defaults.withCredentials = true;
+  // axios.defaults.withCredentials = true;
   axios.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");
     config.headers = Object.assign(
