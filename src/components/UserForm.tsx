@@ -19,10 +19,15 @@ interface Props {
 }
 
 const schema = yup.object().shape({
-  username: yup.string().required("ユーザー名を入力してください。"),
+  username: yup
+    .string()
+    .required("ユーザー名を入力してください。")
+    .matches(/^[a-zA-Z0-9]+$/, "半角英数字のみ有効です。")
+    .max(20, "ユーザー名は最大20文字です。"),
   password: yup
     .string()
     .required("パスワードを入力してください。")
+    .matches(/^[a-zA-Z0-9]+$/, "半角英数字のみ有効です。")
     .min(8, "パスワードは最低8文字以上必要です。"),
 });
 
@@ -30,8 +35,6 @@ export const UserForm: React.FC<Props> = ({ mutation, action, statusCode }) => {
   const { handleSubmit, errors, register, formState } = useForm({
     resolver: yupResolver(schema),
   });
-  console.log(errors);
-  console.log(statusCode);
 
   return (
     <form onSubmit={handleSubmit(mutation)}>
@@ -43,7 +46,7 @@ export const UserForm: React.FC<Props> = ({ mutation, action, statusCode }) => {
         </FormErrorMessage>
         {statusCode === 409 && (
           <Text color="red.300" fontSize="sm" mt={1}>
-            ユーザー名が重複しています。
+            すでに存在するユーザーです。
           </Text>
         )}
       </FormControl>

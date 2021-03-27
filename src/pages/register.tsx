@@ -7,7 +7,6 @@ interface Props {}
 
 const Register: NextPage<Props> = () => {
   const { register, statusCode } = useAuth();
-  console.log(statusCode);
   return (
     <UserForm action="新規登録" mutation={register} statusCode={statusCode} />
   );

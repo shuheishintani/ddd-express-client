@@ -71,7 +71,7 @@ export const TaskItem: React.FC<Props> = ({
           />
         )}
 
-        <Heading fontSize="xl" mx={4}>
+        <Heading fontSize="xl" mx={4} isTruncated>
           {title}
         </Heading>
         <Text fontSize="sm">作成日時 : {moment(created_at).format("lll")}</Text>
