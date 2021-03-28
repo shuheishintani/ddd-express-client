@@ -1,8 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
-import { wait } from "@/utils/wait";
 import {
   Box,
-  Button,
   Flex,
   Link,
   Modal,
@@ -12,13 +10,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 
 export const NavBar: React.FC = () => {
   const { user, loading, logout } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter();
 
   const handleLogout = async () => {
     onOpen();

@@ -16,7 +16,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     (async () => {
-      if (!user) {
+      if (!user && !loading) {
         const token = localStorage.getItem("token");
         if (token) {
           const { data } = await axios.get("/users/me");
@@ -25,7 +25,7 @@ export const useAuth = () => {
       }
       setLoading(false);
     })();
-  }, [user]);
+  }, []);
 
   const handleResponse = async (data: AuthResponse | ErrorResponse) => {
     if (data.hasOwnProperty("error")) {

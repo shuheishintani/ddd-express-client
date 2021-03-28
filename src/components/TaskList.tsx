@@ -28,7 +28,7 @@ export const TaskList: React.FC<Props> = ({
                 new Date(task2.created_at).getTime() -
                 new Date(task1.created_at).getTime()
             )
-            .map((task: Task) => (
+            .map((task) => (
               <TaskItem
                 key={task.id}
                 task={task}
