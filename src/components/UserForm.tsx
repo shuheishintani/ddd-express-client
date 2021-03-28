@@ -42,6 +42,7 @@ export const UserForm: React.FC<Props> = ({ mutation, action, statusCode }) => {
       <FormControl isInvalid={errors.username}>
         <FormLabel htmlFor="username">ユーザー名</FormLabel>
         <Input
+          id="username"
           name="username"
           placeholder="ユーザー名"
           ref={register()}
@@ -64,9 +65,10 @@ export const UserForm: React.FC<Props> = ({ mutation, action, statusCode }) => {
       <FormControl isInvalid={errors.password} mt={4}>
         <FormLabel htmlFor="password">パスワード</FormLabel>
         <PasswordInput
+          idprop="password"
           name="password"
           placeholder="パスワード"
-          refProp={register()}
+          refprop={register()}
           autoComplete="off"
         />
         <FormErrorMessage>

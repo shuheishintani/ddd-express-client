@@ -51,6 +51,7 @@ export const ModalTaskForm: React.FC<Props> = ({
               <FormControl isInvalid={errors.title} key="title">
                 <FormLabel htmlFor="title">タイトル</FormLabel>
                 <Input
+                  id="title"
                   name="title"
                   placeholder="タイトル"
                   ref={register()}
@@ -68,6 +69,7 @@ export const ModalTaskForm: React.FC<Props> = ({
               >
                 <FormLabel htmlFor="description">メモ</FormLabel>
                 <Textarea
+                  id="description"
                   name="description"
                   placeholder="メモ"
                   ref={register()}
